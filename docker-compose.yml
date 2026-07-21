@@ -5,7 +5,7 @@ services:
       context: nest-fin-web
       dockerfile: Dockerfile
     ports:
-      - "8080:80"
+      - "8081:80"
     depends_on:
       - api
   api:
