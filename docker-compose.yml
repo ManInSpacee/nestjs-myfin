@@ -2,7 +2,7 @@ services:
   web:
     container_name: nestjs_fin_web
     build:
-      context: ../nest-fin-web
+      context: nest-fin-web
       dockerfile: Dockerfile
     ports:
       - "8080:80"
@@ -11,7 +11,7 @@ services:
   api:
     container_name: nestjs_fin_api
     build:
-      context: ../nest-fin-api
+      context: nest-fin-api
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
