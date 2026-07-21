@@ -2,7 +2,7 @@ FROM node:22-alpine
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install --include=dev
+RUN npm ci --include=dev --no-audit --no-fund --loglevel verbose
 
 COPY . .
 

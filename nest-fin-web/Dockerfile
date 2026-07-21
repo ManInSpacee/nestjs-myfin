@@ -2,7 +2,8 @@ FROM node:22-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install --include=dev
+RUN npm ci --include=dev --no-audit --no-fund --loglevel verbose
+
 
 COPY . .
 RUN npm run build
