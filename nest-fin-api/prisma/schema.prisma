@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id               String        @id @default(uuid())
+  createdAt        DateTime      @default(now())
+  email            String        @unique
+  passwordHash     String
+  refreshTokenHash String?
+  balance          Decimal       @default(0.0) @db.Decimal(15, 2)
+  transactions     Transaction[]
+  categories       Category[]
+}
+
+model Transaction {
+  id              String          @id @default(uuid())
+  createdAt       DateTime        @default(now())
+  transactionDate DateTime        @default(now())
+  description     String?
+  type            TransactionType
+  amount          Decimal         @db.Decimal(15, 2)
+  userId          String
+  user            User            @relation(fields: [userId], references: [id])
+  categoryId      String?
+  category        Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+}
+
+model Category {
+  id           String        @id @default(uuid())
+  userId       String?
+  user         User?         @relation(fields: [userId], references: [id])
+  transactions Transaction[]
+  name         String
+
+  @@unique([userId, name])
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}

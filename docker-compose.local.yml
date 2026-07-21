@@ -1,0 +1,45 @@
+services:
+  web:
+    container_name: nestjs_fin_web
+    build:
+      context: ../nest-fin-web
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+  api:
+    container_name: nestjs_fin_api
+    build:
+      context: ../nest-fin-api
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgres://postgres:nest_password@db:5432/nestjs_fin_db
+      - JWT_ACCESS_SECRET=08549a7f4bbec7cf2412cee9597cba6a9bac5499ae3971763d7572d272808c19
+      - JWT_REFRESH_SECRET=3331f79f2bd5238bd76b0229d35034c038eaabb3f396cb0f0625f77d67aec11f
+      - JWT_ACCESS_TTL=15m
+      - JWT_REFRESH_TTL=7d
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:16-alpine
+    container_name: nestjs_fin_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: nest_password
+      POSTGRES_DB: nestjs_fin_db
+    ports:
+      - "5444:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d nestjs_fin_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
