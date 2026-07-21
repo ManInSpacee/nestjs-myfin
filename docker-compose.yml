@@ -14,7 +14,7 @@ services:
       context: nest-fin-api
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3008:3000"
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET}
